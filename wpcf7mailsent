@@ -1,0 +1,41 @@
+        // CF7 PROD EVENTS
+        document.addEventListener( 'wpcf7mailsent', function( event ) {
+            let sessionStartRecall = sessionStorage.getItem('r_sessionStartRecall');
+            let pageLoadTimeRecall = sessionStorage.getItem('r_pageLoadTimeRecall');
+            let sessionStartInterval = Math.round((Date.now() - parseInt(sessionStartRecall, 10)) / 1000);
+            let pageLoadInterval = Math.round((Date.now() - parseInt(pageLoadTimeRecall, 10)) / 1000);
+            console.log("Datalayer submit_form detected " + event.detail.contactFormId);
+
+            if ( '610407' == event.detail.contactFormId ) {
+                gtag('event', 'sent_callback', {
+                    'event_category': 'sent_form',
+                    'event_label': 'main',
+                    'session_interval': sessionStartInterval,
+                    'page_load': pageLoadInterval
+                });
+                console.log("Event 'sent_form_main' sent to Google Analytics 4");   
+            }
+            if ( '734430' == event.detail.contactFormId ) {
+                gtag('event', 'sent_callback', {
+                    'event_category': 'sent_form',
+                    'event_label': 'autmz',
+                    'session_interval': sessionStartInterval,
+                    'page_load': pageLoadInterval
+                });
+                console.log("Event 'sent_form_autmz' sent to Google Analytics 4");  
+            }
+            if ( '2987' == event.detail.contactFormId ) {
+                let clickModalTitle = jQuery('#modalbuyoneclick #id-fb-modal-calc-name').text();
+                if ( jQuery('body').hasClass('single-product') ) {
+                    clickModalTitle = jQuery('#content h1').text();
+                }
+                gtag('event', 'sent', {
+                    'event_category': 'sent_form',
+                    'event_label': 'kupitv1click',
+                    'h1': clickModalTitle
+                });
+                console.log(`Event 'sent_kupitv 1 click' sent to GA4 | ${clickModalTitle}`);
+            }
+
+
+        }, false );
